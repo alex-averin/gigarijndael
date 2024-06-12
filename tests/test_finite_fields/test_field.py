@@ -24,7 +24,7 @@ from gigarijndael.finite_fields.field import FiniteField
         (212, 2, 179, 8),
     ],
 )
-def test_field_add(first_multiplier: int, second_multiplier: int, expected_product: int, field_n: int):
+def test_field_multiply(first_multiplier: int, second_multiplier: int, expected_product: int, field_n: int):
     field = FiniteField(n=field_n)
 
     product = field.multiply(first_multiplier, second_multiplier)

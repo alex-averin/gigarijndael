@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import functools
 import operator
 
@@ -15,8 +17,8 @@ class FiniteField:
     def __init__(self, n: int, general_polynomial: int | None = None):
         self.p = 2
         self.n = n
-        self.q = self.p**n
-        self.general_polynomial = general_polynomial or self._get_general_polynomial(n)
+        self.q = self.p**self.n
+        self.general_polynomial = general_polynomial or self.general_polynomials[n]
 
     def add(self, *polynomials: int) -> int:
         return functools.reduce(operator.xor, polynomials)
@@ -61,5 +63,7 @@ class FiniteField:
         gcd, x, y = self.egcd(mod, first)
         return gcd, self.subtract(y, self.multiply(floor, x)), x
 
-    def _get_general_polynomial(self, n: int) -> int:
-        return self.general_polynomials[n]
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, FiniteField):
+            return NotImplemented
+        return self.q == other.q
