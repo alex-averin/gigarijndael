@@ -1,21 +1,23 @@
 import typing
 
-from gigarijndael.encryption.bits import is_bit_set, left_rotate, reduce_bits
+from gigarijndael.encryption.bits import reverse_bits, right_rotate_bits, xor_bits
 
 
-def affine_transformation(number: int, affine: int, const: int, size: int = 8) -> int:
+def affine_transformation(number: int, affine: int, const: int, size: int = 8):
+    number = reverse_bits(number, size=size)
     result = 0
-    for bit_index in range(size):
-        bit = reduce_bits(number & left_rotate(affine, size=size, shift=bit_index)) ^ is_bit_set(const, bit_index)
-        result |= bit << bit_index
-    return result
+    for i in range(size):
+        row = right_rotate_bits(affine, size=size, shift=i)
+        result |= xor_bits(row & number) << i
+
+    return result ^ const
 
 
 def left_shift(items: list[typing.Any], shift: int) -> list[typing.Any]:
-    shift = shift % len(items)
+    shift %= len(items)
     return items[shift:] + items[:shift]
 
 
 def right_shift(items: list[typing.Any], shift: int) -> list[typing.Any]:
-    shift = shift % len(items)
+    shift %= len(items)
     return items[-shift:] + items[:-shift]
