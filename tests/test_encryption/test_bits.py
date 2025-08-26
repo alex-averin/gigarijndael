@@ -6,10 +6,10 @@ from gigarijndael.encryption.bits import (
     is_bit_set,
     left_rotate,
     left_rotate_bits,
+    reverse_bits,
     right_rotate,
     right_rotate_bits,
     xor_bits,
-    reverse_bits,
 )
 
 
@@ -49,7 +49,9 @@ def test_left_rotate(word: int, word_size: int, block_size: int, shift: int, exp
         (0b0010000001000100, 16, 4, 3, 0b0000010001000010),
     ],
 )
-def test_right_rotate(word: int, word_size: int, block_size: int, shift: int, expected_rotated: int):
+def test_right_rotate(
+    word: int, word_size: int, block_size: int, shift: int, expected_rotated: int
+):
     rotated = right_rotate(word, size=word_size, block_size=block_size, shift=shift)
 
     assert rotated == expected_rotated

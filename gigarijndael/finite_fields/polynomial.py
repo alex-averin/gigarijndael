@@ -66,7 +66,9 @@ class Polynomial:
     def _elements(self) -> tuple[str, ...]:
         return tuple("1" if degree == 0 else f"x^{degree}" for degree in self._degrees)
 
-    def _binary_operation(self, other: Polynomial, func: typing.Callable[[int, int], int]) -> Polynomial:
+    def _binary_operation(
+        self, other: Polynomial, func: typing.Callable[[int, int], int]
+    ) -> Polynomial:
         self._validate_finite_field(other=other)
         value = func(self.value, other.value)
         return Polynomial(value, finite_field=self.finite_field)

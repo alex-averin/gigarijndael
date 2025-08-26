@@ -51,6 +51,8 @@ def test_affine_transformation_inverse(number: int):
     inv_affine_const = 0xA38D0057
 
     transform_number = affine_transformation(number, affine_row, affine_const, size=32)
-    inverse_number = affine_transformation(transform_number, inv_affine_row, inv_affine_const, size=32)
+    inverse_number = affine_transformation(
+        transform_number, inv_affine_row, inv_affine_const, size=32
+    )
 
     assert inverse_number == number

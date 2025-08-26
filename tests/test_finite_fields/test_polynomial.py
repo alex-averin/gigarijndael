@@ -25,7 +25,9 @@ from gigarijndael.finite_fields.polynomial import Polynomial
         (212, 2, 179, 8),
     ],
 )
-def test_polynomial_multiply(first_multiplier: int, second_multiplier: int, expected_product: int, field_n: int):
+def test_polynomial_multiply(
+    first_multiplier: int, second_multiplier: int, expected_product: int, field_n: int
+):
     finite_field = FiniteField(n=field_n)
     first_polynomial = Polynomial(value=first_multiplier, finite_field=finite_field)
     second_polynomial = Polynomial(value=second_multiplier, finite_field=finite_field)
@@ -45,7 +47,9 @@ def test_polynomial_multiply(first_multiplier: int, second_multiplier: int, expe
         (3, 100, 33, (3, 7)),
     ],
 )
-def test_polynomial_divmod(field_n: int, dividend: int, divisor: int, expected_divmod: tuple[int, int]):
+def test_polynomial_divmod(
+    field_n: int, dividend: int, divisor: int, expected_divmod: tuple[int, int]
+):
     finite_field = FiniteField(n=field_n)
     quotient_value, remainder_value = expected_divmod
     expected_quotient = Polynomial(value=quotient_value, finite_field=finite_field)
@@ -59,14 +63,26 @@ def test_polynomial_divmod(field_n: int, dividend: int, divisor: int, expected_d
 
 
 @pytest.mark.parametrize(
-    ("first_value", "first_field_order", "second_value", "second_field_order", "expected_is_equals"),
+    (
+        "first_value",
+        "first_field_order",
+        "second_value",
+        "second_field_order",
+        "expected_is_equals",
+    ),
     [(100, 5, 100, 5, True), (2, 3, 2, 3, True), (15, 4, 15, 5, False), (255, 8, 254, 8, False)],
 )
 def test_polynomial_equals(
-    first_value: int, first_field_order: int, second_value: int, second_field_order: int, expected_is_equals: bool
+    first_value: int,
+    first_field_order: int,
+    second_value: int,
+    second_field_order: int,
+    expected_is_equals: bool,
 ):
     first_polynomial = Polynomial(value=first_value, finite_field=FiniteField(n=first_field_order))
-    second_polynomial = Polynomial(value=second_value, finite_field=FiniteField(n=second_field_order))
+    second_polynomial = Polynomial(
+        value=second_value, finite_field=FiniteField(n=second_field_order)
+    )
 
     assert (first_polynomial == second_polynomial) is expected_is_equals
 
