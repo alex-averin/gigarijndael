@@ -5,7 +5,11 @@ import operator
 
 
 class FiniteField:
-    general_polynomials = {
+    """
+    Representation of a Finite Field GF(2^n).
+    """
+
+    general_polynomials: dict[int, int] = {
         3: 0b1011,
         4: 0b10011,
         5: 0b100101,
@@ -14,19 +18,29 @@ class FiniteField:
         32: 0b100000000000000000000000010001101,
     }
 
-    def __init__(self, n: int, general_polynomial: int | None = None):
-        self.p = 2
-        self.n = n
-        self.q = self.p**self.n
-        self.general_polynomial = general_polynomial or self.general_polynomials[n]
+    def __init__(self, n: int, general_polynomial: int | None = None) -> None:
+        """
+        Initialize Finite Field.
+
+        Args:
+            n: Power of 2 (exponent).
+            general_polynomial: Irreducible polynomial. If None, uses a default one for n.
+        """
+        self.p: int = 2
+        self.n: int = n
+        self.q: int = self.p**self.n
+        self.general_polynomial: int = general_polynomial or self.general_polynomials[n]
 
     def add(self, *polynomials: int) -> int:
+        """Addition in Finite Field (XOR)."""
         return functools.reduce(operator.xor, polynomials)
 
     def subtract(self, *polynomials: int) -> int:
+        """Subtraction in Finite Field (same as addition)."""
         return self.add(*polynomials)
 
     def multiply(self, first: int, second: int) -> int:
+        """Multiplication in Finite Field using Russian Peasant Multiplication."""
         product = 0
         while first and second:
             if second & 1:
@@ -39,16 +53,19 @@ class FiniteField:
         return product
 
     def divide(self, dividend: int, divisor: int) -> int:
+        """Division in Finite Field."""
         inverse_divisor = self.inverse(divisor)
         return self.multiply(dividend, inverse_divisor)
 
     def inverse(self, polynomial: int) -> int:
+        """Multiplicative inverse in Finite Field."""
         if polynomial == 0:
-            raise ZeroDivisionError()
+            raise ZeroDivisionError("Cannot find inverse of zero")
         _, inverse, _ = self.egcd(polynomial, self.general_polynomial)
         return inverse
 
     def divmod(self, dividend: int, divisor: int) -> tuple[int, int]:
+        """Division with remainder for polynomials."""
         floor = 0
         divisor_length = divisor.bit_length()
         while (shift := dividend.bit_length() - divisor_length) >= 0:
@@ -57,6 +74,7 @@ class FiniteField:
         return floor, dividend
 
     def egcd(self, first: int, second: int) -> tuple[int, int, int]:
+        """Extended Euclidean Algorithm for polynomials."""
         if first == 0:
             return second, 0, 1
         floor, mod = self.divmod(second, first)

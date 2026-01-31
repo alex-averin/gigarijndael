@@ -154,7 +154,7 @@ def test_word_setitem_index_error(index):
 
 def test_word_setitem_value_too_large():
     word = Word()
-    with pytest.raises(ValueError, match="Byte length cannot be more than"):
+    with pytest.raises(ValueError, match="Item length cannot be more than"):
         word[0] = 0x100
 
 

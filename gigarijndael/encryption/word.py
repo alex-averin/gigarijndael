@@ -9,11 +9,20 @@ BYTE_SIZE: int = 8
 
 class Word:
     LENGTH: int = 4  # Count of items in one word, constant for all modifications
-    ITEM_SIZE: int = 1  # Size of each word item in bytes
+    ITEM_SIZE: int = 1  # Size of each word item in bytes (8 bits by default)
 
     __slots__ = ("_value",)
 
-    def __init__(self, value: int = 0):
+    def __init__(self, value: int = 0) -> None:
+        """
+        Initialize a Word with a given integer value.
+
+        Args:
+            value: The integer value of the word.
+
+        Raises:
+            ValueError: If the value exceeds the word's bit size.
+        """
         if value.bit_length() > self.size_bits():
             raise ValueError(
                 f"Word length cannot be more than {self.size_bits()} "
@@ -23,22 +32,30 @@ class Word:
 
     @classmethod
     def item_size_bits(cls) -> int:
+        """Return the size of a single item in bits."""
         return cls.ITEM_SIZE * BYTE_SIZE
 
     @classmethod
-    def size(cls):
+    def size(cls) -> int:
+        """Return the total size of the word in default items (bytes)."""
         return cls.LENGTH * cls.ITEM_SIZE
 
     @classmethod
     def size_bits(cls) -> int:
-        """Size of word in bits."""
+        """Return the total size of the word in bits."""
         return cls.size() * BYTE_SIZE
 
     @classmethod
     def from_items(cls, items: typing.Iterable[int]) -> Word:
         """
         Create a word from a sequence of integers.
-        The first element is the most significant byte of the word.
+        The first element is the most significant item of the word.
+
+        Args:
+            items: An iterable of integers representing word items.
+
+        Returns:
+            A new Word instance.
         """
         word = cls(0)
         for i, item in enumerate(items):
@@ -46,23 +63,40 @@ class Word:
         return word
 
     def __lshift__(self, other: int) -> Word:
-        """Left cyclic shift."""
-        return Word(
+        """
+        Left cyclic shift of items.
+
+        Args:
+            other: Number of items to shift.
+
+        Returns:
+            A new Word instance with shifted items.
+        """
+        return self.__class__(
             left_rotate(
                 self._value, size=self.size_bits(), block_size=self.item_size_bits(), shift=other
             )
         )
 
     def __rshift__(self, other: int) -> Word:
-        """Right cyclic shift."""
-        return Word(
+        """
+        Right cyclic shift of items.
+
+        Args:
+            other: Number of items to shift.
+
+        Returns:
+            A new Word instance with shifted items.
+        """
+        return self.__class__(
             right_rotate(
                 self._value, size=self.size_bits(), block_size=self.item_size_bits(), shift=other
             )
         )
 
     def __xor__(self, other: Word) -> Word:
-        return Word(int(self) ^ int(other))
+        """Bitwise XOR with another Word."""
+        return self.__class__(int(self) ^ int(other))
 
     def __repr__(self) -> str:
         hex_width = self.size() * 2
@@ -91,7 +125,7 @@ class Word:
             raise IndexError("Word assignment index out of range")
         if value.bit_length() > self.item_size_bits():
             raise ValueError(
-                f"Byte length cannot be more than {self.item_size_bits()} bits, "
+                f"Item length cannot be more than {self.item_size_bits()} bits, "
                 f"received {value.bit_length()} bits"
             )
         self._value |= value << (self.LENGTH - key - 1) * self.item_size_bits()

@@ -1,10 +1,19 @@
 [tool.poetry]
 name = "gigarijndael"
 version = "0.1.0"
-description = ""
+description = "Python implementation of Rijndael cipher with GF(2^32) extensions"
 authors = ["Aleksey Averin <averin-av@outlook.com>"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/alex-averin/gigarijndael"
+keywords = ["rijndael", "aes", "cryptography", "galois-field", "encryption"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security :: Cryptography"
+]
 
 [tool.poetry.dependencies]
 python = "^3.13"
